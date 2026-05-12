@@ -1,6 +1,6 @@
 [package]
 name = "dsql-lint"
-version = "0.1.1"
+version = "0.1.4"
 edition = "2021"
 rust-version = "1.80"
 description = "Lint SQL files for Aurora DSQL compatibility"
@@ -11,10 +11,21 @@ homepage = "https://github.com/awslabs/aurora-dsql-tools/tree/main/dsql-lint"
 keywords = ["aws", "aurora", "dsql", "sql", "lint"]
 categories = ["command-line-utilities", "database"]
 
+[lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = ["cfg(dsql_cluster)"]
+
+[features]
+default = ["serde"]
+serde = ["dep:serde", "dep:serde_json"]
+
 [dependencies]
 sqlparser = { package = "sqlparser-dsql", version = "0.61.0" }
 clap = { version = "4", features = ["derive"] }
 tempfile = "3"
+strum = { version = "0.26", features = ["derive"] }
+serde = { version = "1", features = ["derive"], optional = true }
+serde_json = { version = "1", optional = true }
 
 [lib]
 name = "dsql_lint"
@@ -23,4 +34,4 @@ path = "src/lib.rs"
 [[bin]]
 name = "dsql-lint"
 path = "src/main.rs"
-
+required-features = ["serde"]
